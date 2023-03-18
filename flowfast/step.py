@@ -1,16 +1,7 @@
-from abc import ABC, abstractmethod
 from dataclasses import dataclass, field
-from typing import Any, Callable, Dict, List, Tuple, TypeVar, Generic
+from typing import Any, Callable, Dict, Iterable, List, Tuple
 
-I = TypeVar("I")
-O = TypeVar("O")
-
-
-class Step(ABC, Generic[I, O]):
-    @abstractmethod
-    def process(self, input: I) -> O:
-        pass
-
+from flowfast.base import Step, WorkflowBase
 
 Mapping = Dict[str, Any]
 Predicate = Callable[[Mapping], bool]

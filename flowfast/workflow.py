@@ -1,5 +1,6 @@
 from dataclasses import dataclass
-from typing import Callable, Generic, TypeVar
+from typing import Callable, Iterable, TypeVar
+from flowfast.base import WorkflowBase
 from flowfast.step import Step
 
 I = TypeVar("I")
@@ -16,13 +17,23 @@ class _StepConnector(Step[I, O]):
 
 
 @dataclass
-class Workflow(Generic[I, O]):
+class Workflow(WorkflowBase[I, O]):
     step: Step[I, O]
 
-    def next(self, next_step: Step[O, T]) -> "Workflow[I, T]":
+    def next(self, next_step: Step[O, T]) -> WorkflowBase[I, T]:
         return Workflow(
             _StepConnector(lambda i: next_step.process(self.step.process(i)))
         )
 
     def run(self, input: I) -> O:
         return self.step.process(input)
+
+    @classmethod
+    def for_each(cls, wf: WorkflowBase[I, O]) -> WorkflowBase[Iterable[I], Iterable[O]]:
+        def _execute_all(inputs: Iterable[I]):
+            results = []
+            for input in inputs:
+                results.append(wf.run(input))
+            return results
+
+        return Workflow[Iterable[I], Iterable[O]](_StepConnector(_execute_all))

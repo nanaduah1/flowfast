@@ -45,3 +45,12 @@ def test_3_step_workflow():
     expected = 3
 
     assert actual == expected
+
+
+def test_iterable_input_flow():
+    wf = Workflow(AddFactor(1))
+    tested = Workflow.for_each(wf)
+    expected = [2, 1, 5]
+
+    actual = tested.run([1, 0, 4])
+    assert actual == expected
