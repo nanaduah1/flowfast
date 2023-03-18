@@ -5,7 +5,7 @@ from flowfast.workflow import Workflow
 
 
 @dataclass
-class LoggerStep(Step[int, int]):
+class AddFactor(Step[int, int]):
     factor: int
 
     def process(self, input: int) -> int:
@@ -19,7 +19,7 @@ def test_empty_workflow_errors():
 
 
 def test_one_step_workflow():
-    tested = Workflow(LoggerStep(1))
+    tested = Workflow(AddFactor(1))
     actual = tested.run(1)
     expected = 2
 
@@ -27,7 +27,7 @@ def test_one_step_workflow():
 
 
 def test_2_step_workflow():
-    tested = Workflow(LoggerStep(1)).next(LoggerStep(2))
+    tested = Workflow(AddFactor(1)).next(AddFactor(2))
     actual = tested.run(1)
     expected = 4
 
@@ -36,15 +36,12 @@ def test_2_step_workflow():
 
 def test_3_step_workflow():
     tested = (
-        Workflow(LoggerStep(1))
-        .next(LoggerStep(2))
-        .next(LoggerStep(3))
-        .next(LoggerStep(3))
-        .next(LoggerStep(-3))
-        .next(LoggerStep(3))
-        .next(LoggerStep(-3))
+        Workflow(AddFactor(1))  # Add 1 to input
+        .next(AddFactor(2))  # add 2 to input
+        .next(AddFactor(3))  # add 3 to input
+        .next(AddFactor(-3))  # Subtract 3 from input
     )
-    actual = tested.run(1)
-    expected = 7
+    actual = tested.run(0)
+    expected = 3
 
     assert actual == expected
