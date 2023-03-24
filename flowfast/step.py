@@ -1,7 +1,7 @@
 from dataclasses import dataclass, field
-from typing import Any, Callable, Dict, Iterable, List, Tuple
+from typing import Any, Callable, Dict, List, Tuple
 
-from flowfast.base import Step, WorkflowBase
+from flowfast.base import Step
 
 Mapping = Dict[str, Any]
 Predicate = Callable[[Mapping], bool]

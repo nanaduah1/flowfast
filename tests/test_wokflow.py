@@ -53,4 +53,4 @@ def test_iterable_input_flow():
     expected = [2, 1, 5]
 
     actual = tested.run([1, 0, 4])
-    assert actual == expected
+    assert list(actual) == expected
