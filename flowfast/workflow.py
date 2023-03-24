@@ -31,9 +31,7 @@ class Workflow(WorkflowBase[I, O]):
     @classmethod
     def for_each(cls, wf: WorkflowBase[I, O]) -> WorkflowBase[Iterable[I], Iterable[O]]:
         def _execute_all(inputs: Iterable[I]):
-            results = []
             for input in inputs:
-                results.append(wf.run(input))
-            return results
+                yield wf.run(input)
 
         return Workflow[Iterable[I], Iterable[O]](_StepConnector(_execute_all))
