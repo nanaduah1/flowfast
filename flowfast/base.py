@@ -12,6 +12,12 @@ class WorkflowBase(ABC, Generic[I, O]):
         pass
 
 
+class Chainable(ABC, Generic[I, O]):
+    @abstractmethod
+    def next(self, next_step: "Step[O, T]") -> "WorkflowBase[I, T]":
+        pass
+
+
 class Step(ABC, Generic[I, O]):
     @abstractmethod
     def process(self, input: I) -> O:
